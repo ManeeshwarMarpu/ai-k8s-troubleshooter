@@ -1,0 +1,59 @@
+Name:             broken-pod
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             minikube/192.168.49.2
+Start Time:       Sun, 14 Dec 2025 19:12:35 -0600
+Labels:           run=broken-pod
+Annotations:      <none>
+Status:           Failed
+IP:               10.244.0.3
+IPs:
+  IP:  10.244.0.3
+Containers:
+  broken-pod:
+    Container ID:  docker://95b38611678296d73d22bf69a8d1c39a5d7a273f0efbc2129c88507296afe825
+    Image:         busybox
+    Image ID:      docker-pullable://busybox@sha256:d80cd694d3e9467884fcb94b8ca1e20437d8a501096cdf367a5a1918a34fc2fd
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sh
+      -c
+      exit 1
+    State:          Terminated
+      Reason:       Error
+      Exit Code:    1
+      Started:      Sun, 14 Dec 2025 19:12:38 -0600
+      Finished:     Sun, 14 Dec 2025 19:12:39 -0600
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-vhphr (ro)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   False 
+  Initialized                 True 
+  Ready                       False 
+  ContainersReady             False 
+  PodScheduled                True 
+Volumes:
+  kube-api-access-vhphr:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    Optional:                false
+    DownwardAPI:             true
+QoS Class:                   BestEffort
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age    From               Message
+  ----    ------     ----   ----               -------
+  Normal  Scheduled  9m20s  default-scheduler  Successfully assigned default/broken-pod to minikube
+  Normal  Pulling    9m20s  kubelet            Pulling image "busybox"
+  Normal  Pulled     9m17s  kubelet            Successfully pulled image "busybox" in 2.968s (2.968s including waiting). Image size: 4429382 bytes.
+  Normal  Created    9m17s  kubelet            Created container: broken-pod
+  Normal  Started    9m16s  kubelet            Started container broken-pod
