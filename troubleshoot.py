@@ -1,14 +1,25 @@
 import subprocess
+import json
+import re
 
 def analyze_k8s_issue(kubectl_output):
     prompt = f"""
-You are a Senior Site Reliability Engineer.
+You are a Senior Kubernetes SRE.
 
-Analyze the following kubectl describe pod output.
+Return ONLY valid JSON.
+NO explanations.
+NO markdown.
+NO backticks.
+NO extra text.
 
-1. Identify the root cause
-2. Explain the issue clearly
-3. Suggest the exact fix or command change
+JSON schema:
+{{
+  "issue_type": "",
+  "root_cause": "",
+  "severity": "LOW | MEDIUM | HIGH",
+  "recommended_fix": "",
+  "confidence": 0.0
+}}
 
 kubectl output:
 {kubectl_output}
@@ -21,13 +32,28 @@ kubectl output:
         capture_output=True
     )
 
-    return result.stdout
+    return result.stdout.strip()
 
 
-with open("pod_issue.txt", "r") as file:
-    pod_output = file.read()
+def extract_json(text):
+    match = re.search(r"\{.*\}", text, re.DOTALL)
+    if not match:
+        raise ValueError("No JSON object found")
+    return match.group(0)
 
-analysis = analyze_k8s_issue(pod_output)
 
-print("\n====== AI Kubernetes Incident Analysis ======\n")
-print(analysis)
+with open("image_pull_issue.txt", "r") as f:
+    pod_output = f.read()
+
+raw_response = analyze_k8s_issue(pod_output)
+
+print("\n====== RAW AI RESPONSE ======\n")
+print(raw_response)
+
+print("\n====== PARSED JSON ======\n")
+try:
+    json_str = extract_json(raw_response)
+    parsed = json.loads(json_str)
+    print(json.dumps(parsed, indent=2))
+except Exception as e:
+    print("❌ Failed to parse JSON:", e)
